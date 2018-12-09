@@ -9,15 +9,16 @@ import twitter4j.auth.RequestToken;
 public class TwitterController {
 
   @RequestMapping("/")
-  public String getTweetsFromTwit() throws Exception {
+  public RequestToken getTweetsFromTwit() throws Exception {
     String toReturn = "";
 
     Twitter twitter = TwitterFactory.getSingleton();
 
     RequestToken requestToken = twitter.getOAuthRequestToken("http://localhost:8080/success");
 
+    return requestToken;
 
-
+  /*
     Query query = new Query("from:nicky_robby ");
 
 
@@ -29,7 +30,7 @@ public class TwitterController {
     }
 
     return toReturn;
-
+*/
 
   }
 
