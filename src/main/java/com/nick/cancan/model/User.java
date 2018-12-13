@@ -8,7 +8,7 @@ public class User {
 
     String token;
 
-    String tokenSecret;
+    String accessToken;
 
     public Long getUserId() {
         return userId;
@@ -35,10 +35,10 @@ public class User {
     }
 
     public String getTokenSecret() {
-        return tokenSecret;
+        return accessToken;
     }
 
     public void setTokenSecret(String tokenSecret) {
-        this.tokenSecret = tokenSecret;
+        this.accessToken = tokenSecret;
     }
 }

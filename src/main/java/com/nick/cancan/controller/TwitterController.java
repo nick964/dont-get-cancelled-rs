@@ -19,24 +19,30 @@ public class TwitterController {
 
     Twitter twitter = TwitterFactory.getSingleton();
 
-    RequestToken requestToken = twitter.getOAuthRequestToken("http://localhost:8080/success");
+    RequestToken requestToken = twitter.getOAuthRequestToken("http://localhost:4200/authsuccess");
 
     return requestToken;
   }
 
+  @CrossOrigin
+  @RequestMapping("/test")
+  public String getTheTest() {
+    String tada = "";
+    return tada;
+  }
+
   @RequestMapping(value = "/success", method = RequestMethod.GET)
-  public String testSuccess(@RequestParam("oauth_token") String OAuthToken,
+  public AccessToken testSuccess(@RequestParam("oauth_token") String OAuthToken,
                             @RequestParam("oauth_verifier") String OAuthVerifier) throws Exception {
 
     Twitter twitter = TwitterFactory.getSingleton();
     AccessToken accessToken = twitter.getOAuthAccessToken(OAuthVerifier);
-    String toReturn = "Screen name is " + accessToken.getScreenName() + " and user ID is " + accessToken.getUserId();
     twitter.setOAuthAccessToken(accessToken);
 
     Query q = new Query();
     q.setQuery(buildQuery(accessToken.getScreenName()));
     QueryResult res = twitter.search().search(q);
-    return toReturn;
+    return accessToken;
   }
 
   private String buildQuery(String user) {
