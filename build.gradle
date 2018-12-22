@@ -29,5 +29,7 @@ dependencies {
   implementation('org.springframework.boot:spring-boot-starter-web')
   testImplementation('org.springframework.boot:spring-boot-starter-test')
   compile group: 'org.twitter4j', name: 'twitter4j-core', version: '4.0.7'
+  compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+
 
 }
