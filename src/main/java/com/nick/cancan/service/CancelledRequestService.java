@@ -90,24 +90,33 @@ public class CancelledRequestService {
     }
 
     private ResponseEntity<String> getBearerToken() {
+        try {
+
+
         String key = "Uxo8KMdQZVvlZOWh0TtysW0w9";
         String secret = "cZVTXrQHnZ3FUAUKtQUA5OyK1UE8lJ3IY0NjVorVzj7UU1OcE3";
-        String tokenEncoded = Base64.getEncoder().encodeToString((key +":"+secret).getBytes());
+        String tokenEncoded = BASE64Encoder.encode((key+":"+secret).getBytes("UTF-8"));
         String url = "https://api.twitter.com/oauth2/token";
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-        headers.add("Authorization", "Bearer " + tokenEncoded);
-        headers.add("Content-Type", "application/x-www-form-urlencoded");
-        BearerRequest bearerRequest = new BearerRequest();
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+        headers.add("Authorization", "Basic " + tokenEncoded);
+        headers.add("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        headers.add("User-Agent", "Dont Get Cancelled Application v1.0");
+        map.add("grant_type", "client_credentials");
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
-        HttpEntity<BearerRequest> bearerRequestHttpEntity = new HttpEntity<>(bearerRequest, headers);
-
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, bearerRequestHttpEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url,  request, String.class);
 
         return  responseEntity;
+        } catch (Exception e) {
+
+            return null;
+        }
+
 
     }
 
