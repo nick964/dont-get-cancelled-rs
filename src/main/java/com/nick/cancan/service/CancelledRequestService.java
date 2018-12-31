@@ -1,6 +1,8 @@
 package com.nick.cancan.service;
 
 import com.nick.cancan.model.BearerRequest;
+import com.nick.cancan.model.BearerResponse;
+import com.nick.cancan.model.MyQueryResult;
 import com.nick.cancan.resource.ArchiveResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -27,7 +29,7 @@ public class CancelledRequestService {
     public static String FULL_ARCHIVE_URL = "https://api.twitter.com/1.1/tweets/search/fullarchive/dev.json";
 
 
-    public ResponseEntity<String> getCancelledTweets(AccessToken accessToken, OAuthAuthorization oAuthAuthorization) {
+    public ResponseEntity<MyQueryResult> getCancelledTweets(AccessToken accessToken, OAuthAuthorization oAuthAuthorization) {
         ArrayList<String> tweets = new ArrayList<>();
 
         List<HttpParameter> parameters = oAuthAuthorization.generateOAuthSignatureHttpParams("GET", FULL_ARCHIVE_URL);
@@ -42,7 +44,8 @@ public class CancelledRequestService {
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", httpHeaders);
 
-        ResponseEntity<String> responseEntity = restTemplate.exchange(FULL_ARCHIVE_URL + "?query=from:nicky_robby&maxResults=20", HttpMethod.GET, entity, String.class);
+
+        ResponseEntity<MyQueryResult> responseEntity = restTemplate.exchange(FULL_ARCHIVE_URL + "?query=from:nicky_robby&maxResults=20", HttpMethod.GET, entity, MyQueryResult.class);
 
 
 
@@ -89,7 +92,7 @@ public class CancelledRequestService {
         return auth;
     }
 
-    private ResponseEntity<String> getBearerToken() {
+    private String getBearerToken() {
         try {
 
 
@@ -109,9 +112,10 @@ public class CancelledRequestService {
         map.add("grant_type", "client_credentials");
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url,  request, String.class);
+        ResponseEntity<BearerResponse> responseEntity = restTemplate.postForEntity(url,  request, BearerResponse.class);
 
-        return  responseEntity;
+        return  responseEntity.getBody().getAccess_token();
+
         } catch (Exception e) {
 
             return null;

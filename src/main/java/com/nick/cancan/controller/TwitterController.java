@@ -1,5 +1,8 @@
 package com.nick.cancan.controller;
 
+import com.nick.cancan.entity.BadWords;
+import com.nick.cancan.model.MyQueryResult;
+import com.nick.cancan.repository.BadWordsRepository;
 import com.nick.cancan.service.CancelledRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,9 @@ public class TwitterController {
   @Autowired
   CancelledRequestService cancelledRequestService;
 
+  @Autowired
+  BadWordsRepository badWordsRepository;
+
   @CrossOrigin
   @RequestMapping("/")
   public RequestToken getTweetsFromTwit(HttpServletRequest request) throws Exception {
@@ -35,10 +41,9 @@ public class TwitterController {
   }
 
   @CrossOrigin
-  @RequestMapping("/pullTweets")
-  public String getTheTest() {
-    String tada = "";
-    return tada;
+  @RequestMapping("/badWords")
+  public Iterable<BadWords> getTheTest() {
+    return badWordsRepository.findAll();
   }
 
   @CrossOrigin
@@ -49,12 +54,17 @@ public class TwitterController {
 
     Twitter twitter = TwitterFactory.getSingleton();
 
+
     AccessToken accessToken = twitter.getOAuthAccessToken(OAuthVerifier);
     twitter.setOAuthAccessToken(accessToken);
 
     OAuthAuthorization oAuthAuthorization = new OAuthAuthorization(twitter.getConfiguration());
 
-    ResponseEntity<String> tweets = cancelledRequestService.getCancelledTweets(accessToken, oAuthAuthorization);
+    Query q = new Query("whatever");
+    twitter.search().search(q);
+
+
+    ResponseEntity<MyQueryResult> tweets = cancelledRequestService.getCancelledTweets(accessToken, oAuthAuthorization);
     return accessToken;
   }
 
