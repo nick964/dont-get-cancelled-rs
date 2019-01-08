@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "canceled_words")
-public class BadWords {
+public class BadWord {
 
     @Id
     @Column(name="id")
