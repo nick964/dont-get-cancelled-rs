@@ -1,6 +1,8 @@
 package com.nick.cancan.model;
 
-public class User {
+import java.util.Date;
+
+public class UserDao {
 
     Long userId;
 
@@ -9,6 +11,7 @@ public class User {
     String token;
 
     String accessToken;
+
 
     public Long getUserId() {
         return userId;

@@ -108,7 +108,7 @@ public class CancelledRequestService {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
         headers.add("Authorization", "Basic " + tokenEncoded);
         headers.add("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-        headers.add("User-Agent", "Dont Get Cancelled Application v1.0");
+        headers.add("UserDao-Agent", "Dont Get Cancelled Application v1.0");
         map.add("grant_type", "client_credentials");
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
