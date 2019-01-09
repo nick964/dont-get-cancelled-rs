@@ -21,7 +21,7 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
         }
         String q = "?query=from:" + screenname;
 
-        List<BadWord> badWords = badWordsRepository.findAll();
+        List<BadWord> badWords = badWordsRepository.findAllWithLimit();
 
         for(BadWord word : badWords) {
             q = q.concat(" ").concat(word.getText());

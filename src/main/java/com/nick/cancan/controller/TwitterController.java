@@ -60,15 +60,9 @@ public class TwitterController {
     AccessToken accessToken = twitter.getOAuthAccessToken(OAuthVerifier);
     twitter.setOAuthAccessToken(accessToken);
 
-    userService.createAndSave(accessToken);
+    userService.createAndSaveUser(accessToken);
 
-    OAuthAuthorization oAuthAuthorization = new OAuthAuthorization(twitter.getConfiguration());
-
-    Query q = new Query("whatever");
-    twitter.search().search(q);
-
-
-    ResponseEntity<MyQueryResult> tweets = cancelledRequestService.getCancelledTweets(accessToken, oAuthAuthorization);
+    ResponseEntity<MyQueryResult> tweets = cancelledRequestService.getCancelledTweets(accessToken);
     return accessToken;
   }
 

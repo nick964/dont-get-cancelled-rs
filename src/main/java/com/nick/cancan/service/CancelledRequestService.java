@@ -25,16 +25,14 @@ import java.util.*;
 @Service
 public class CancelledRequestService {
 
+    @Autowired
+    QueryBuilderService queryBuilderService;
+
 
     public static String FULL_ARCHIVE_URL = "https://api.twitter.com/1.1/tweets/search/fullarchive/dev.json";
 
 
-    public ResponseEntity<MyQueryResult> getCancelledTweets(AccessToken accessToken, OAuthAuthorization oAuthAuthorization) {
-        ArrayList<String> tweets = new ArrayList<>();
-
-        List<HttpParameter> parameters = oAuthAuthorization.generateOAuthSignatureHttpParams("GET", FULL_ARCHIVE_URL);
-
-        HttpRequest request = new HttpRequest(RequestMethod.GET,FULL_ARCHIVE_URL, buildQuery(accessToken.getScreenName()), oAuthAuthorization, getHeadersAsMap(parameters));
+    public ResponseEntity<MyQueryResult> getCancelledTweets(AccessToken accessToken) {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -43,11 +41,9 @@ public class CancelledRequestService {
 
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", httpHeaders);
+        String query = queryBuilderService.buildQuery(accessToken.getScreenName());
 
-
-        ResponseEntity<MyQueryResult> responseEntity = restTemplate.exchange(FULL_ARCHIVE_URL + "?query=from:nicky_robby&maxResults=20", HttpMethod.GET, entity, MyQueryResult.class);
-
-
+        ResponseEntity<MyQueryResult> responseEntity = restTemplate.exchange(FULL_ARCHIVE_URL + query, HttpMethod.GET, entity, MyQueryResult.class);
 
         return  responseEntity;
     }

@@ -8,33 +8,12 @@ import twitter4j.auth.AccessToken;
 
 import java.util.Date;
 
-public class UserService {
+public interface UserService {
 
-    @Autowired
-    UserRepository userRepository;
-
-    public User createAndSaveUser(AccessToken token) {
-        User existingUser = userRepository.findByToken(token.getToken());
-        if(existingUser == null) {
-            User newUser = createUser(token);
-            return userRepository.save(newUser);
-        } else {
-            existingUser.setLastLogin(new Date());
-            return userRepository.save(existingUser);
-        }
-
-    }
+    User createAndSaveUser(AccessToken token);
 
 
-    public User createUser(AccessToken accessToken) {
-        User user = new User();
-        user.setScreenName(accessToken.getScreenName());
-        user.setToken(accessToken.getToken());
-        user.setTokenSecret(accessToken.getTokenSecret());
-        user.setCreatedDate(new Date());
-        user.setLastLogin(new Date());
-        return user;
-    }
+    User createUser(AccessToken accessToken);
 
 
 }
