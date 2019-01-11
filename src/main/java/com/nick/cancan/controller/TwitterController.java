@@ -59,9 +59,7 @@ public class TwitterController {
     Twitter twitter = TwitterFactory.getSingleton();
     AccessToken accessToken = twitter.getOAuthAccessToken(OAuthVerifier);
     twitter.setOAuthAccessToken(accessToken);
-
     userService.createAndSaveUser(accessToken);
-
     ResponseEntity<MyQueryResult> tweets = cancelledRequestService.getCancelledTweets(accessToken);
     return accessToken;
   }

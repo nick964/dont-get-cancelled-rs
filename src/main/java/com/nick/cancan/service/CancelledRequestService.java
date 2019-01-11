@@ -1,12 +1,16 @@
 package com.nick.cancan.service;
 
-import com.nick.cancan.model.BearerRequest;
-import com.nick.cancan.model.BearerResponse;
-import com.nick.cancan.model.MyQueryResult;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nick.cancan.model.*;
 import com.nick.cancan.resource.ArchiveResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.social.twitter.api.SearchResults;
+import org.springframework.social.twitter.api.Tweet;
+import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -28,6 +32,8 @@ public class CancelledRequestService {
     @Autowired
     QueryBuilderService queryBuilderService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CancelledRequestService.class);
+
 
     public static String FULL_ARCHIVE_URL = "https://api.twitter.com/1.1/tweets/search/fullarchive/dev.json";
 
@@ -42,10 +48,25 @@ public class CancelledRequestService {
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", httpHeaders);
         String query = queryBuilderService.buildQuery(accessToken.getScreenName());
+        ResponseEntity<String> responseEntity = restTemplate.exchange(FULL_ARCHIVE_URL + query, HttpMethod.GET, entity, String.class);
 
-        ResponseEntity<MyQueryResult> responseEntity = restTemplate.exchange(FULL_ARCHIVE_URL + query, HttpMethod.GET, entity, MyQueryResult.class);
+        JSONObject responseArray = new JSONObject(responseEntity.getBody());
+        JSONArray results = responseArray.getJSONArray("results");
 
-        return  responseEntity;
+        List<TweetDao> tweets = new ArrayList<>();
+
+
+        ObjectMapper mapper = new ObjectMapper();
+        try{
+            for(int i = 0; i < results.length(); i++) {
+                tweets.add(mapper.readValue(results.getString(i), TweetDao.class));
+            }
+        } catch (Exception e) {
+            LOGGER.error("ERROR: " , e);
+        }
+
+
+        return  null;
     }
 
 
@@ -59,6 +80,18 @@ public class CancelledRequestService {
         HttpParameter httpParameter = new HttpParameter("q",query);
         httpParams[0] = httpParameter;
         return httpParams;
+
+    }
+
+    private ResultsObject mapResponse(ResponseEntity<String> response) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ResultsObject results = mapper.readValue(response.getBody(), ResultsObject.class);
+            return results;
+        } catch(Exception e) {
+            LOGGER.error("error parsing response " + e);
+            return null;
+        }
 
     }
 
