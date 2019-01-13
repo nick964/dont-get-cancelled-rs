@@ -4,44 +4,23 @@ import java.util.Date;
 
 public class UserDao {
 
-    Long userId;
+    Long id;
 
-    String screenName;
+    String screen_name;
 
-    String token;
-
-    String accessToken;
-
-
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getScreenName() {
-        return screenName;
+    public String getScreen_name() {
+        return screen_name;
     }
 
-    public void setScreenName(String screenName) {
-        this.screenName = screenName;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getTokenSecret() {
-        return accessToken;
-    }
-
-    public void setTokenSecret(String tokenSecret) {
-        this.accessToken = tokenSecret;
+    public void setScreen_name(String screen_name) {
+        this.screen_name = screen_name;
     }
 }

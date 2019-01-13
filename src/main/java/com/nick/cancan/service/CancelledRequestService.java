@@ -2,28 +2,18 @@ package com.nick.cancan.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nick.cancan.model.*;
-import com.nick.cancan.resource.ArchiveResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.social.twitter.api.SearchResults;
-import org.springframework.social.twitter.api.Tweet;
-import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import twitter4j.*;
-import twitter4j.HttpRequest;
 import twitter4j.auth.AccessToken;
-import twitter4j.auth.Authorization;
-import twitter4j.auth.OAuth2Token;
-import twitter4j.auth.OAuthAuthorization;
-
-import javax.xml.ws.Response;
 import java.util.*;
 
 @Service
@@ -32,13 +22,16 @@ public class CancelledRequestService {
     @Autowired
     QueryBuilderService queryBuilderService;
 
+    @Autowired
+    OembedService oembedService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CancelledRequestService.class);
 
 
     public static String FULL_ARCHIVE_URL = "https://api.twitter.com/1.1/tweets/search/fullarchive/dev.json";
 
 
-    public ResponseEntity<MyQueryResult> getCancelledTweets(AccessToken accessToken) {
+    public List<TweetDao> getCancelledTweets(AccessToken accessToken) {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -61,12 +54,12 @@ public class CancelledRequestService {
             for(int i = 0; i < results.length(); i++) {
                 tweets.add(mapper.readValue(results.getString(i), TweetDao.class));
             }
+            tweets = oembedService.getOembedTweets(tweets);
         } catch (Exception e) {
             LOGGER.error("ERROR: " , e);
         }
 
-
-        return  null;
+        return tweets;
     }
 
 

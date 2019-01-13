@@ -2,6 +2,7 @@ package com.nick.cancan.controller;
 
 import com.nick.cancan.entity.BadWord;
 import com.nick.cancan.model.MyQueryResult;
+import com.nick.cancan.model.TweetDao;
 import com.nick.cancan.repository.BadWordsRepository;
 import com.nick.cancan.service.CancelledRequestService;
 import com.nick.cancan.service.UserServiceImpl;
@@ -15,6 +16,7 @@ import twitter4j.auth.OAuthAuthorization;
 import twitter4j.auth.RequestToken;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 @RestController
@@ -50,18 +52,18 @@ public class TwitterController {
     return badWordsRepository.findAll();
   }
 
-  @CrossOrigin
+    @CrossOrigin
   @RequestMapping(value = "/success", method = RequestMethod.GET)
-  public AccessToken testSuccess(@RequestParam("oauth_token") String OAuthToken,
-                            @RequestParam("oauth_verifier") String OAuthVerifier,
-                                 HttpServletRequest request) throws Exception {
+  public @ResponseBody
+    List<TweetDao> testSuccess(@RequestParam("oauth_token") String OAuthToken,
+                               @RequestParam("oauth_verifier") String OAuthVerifier,
+                               HttpServletRequest request) throws Exception {
 
     Twitter twitter = TwitterFactory.getSingleton();
     AccessToken accessToken = twitter.getOAuthAccessToken(OAuthVerifier);
     twitter.setOAuthAccessToken(accessToken);
     userService.createAndSaveUser(accessToken);
-    ResponseEntity<MyQueryResult> tweets = cancelledRequestService.getCancelledTweets(accessToken);
-    return accessToken;
+    return cancelledRequestService.getCancelledTweets(accessToken);
   }
 
 
