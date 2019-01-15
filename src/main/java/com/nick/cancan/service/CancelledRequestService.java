@@ -39,9 +39,12 @@ public class CancelledRequestService {
         httpHeaders.add("Authorization", "Bearer " + getBearerToken());
 
 
-        HttpEntity<String> entity = new HttpEntity<>("parameters", httpHeaders);
-        String query = queryBuilderService.buildQuery(accessToken.getScreenName());
-        ResponseEntity<String> responseEntity = restTemplate.exchange(FULL_ARCHIVE_URL + query, HttpMethod.GET, entity, String.class);
+
+        MyQueryRequest query = queryBuilderService.buildQuery(accessToken.getScreenName());
+
+        HttpEntity<MyQueryRequest> entity = new HttpEntity<>(query, httpHeaders);
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange(FULL_ARCHIVE_URL, HttpMethod.POST, entity, String.class);
 
         JSONObject responseArray = new JSONObject(responseEntity.getBody());
         JSONArray results = responseArray.getJSONArray("results");

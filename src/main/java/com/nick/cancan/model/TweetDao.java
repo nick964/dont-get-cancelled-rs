@@ -1,7 +1,10 @@
 package com.nick.cancan.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.util.StringUtils;
+
+import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TweetDao {
@@ -14,7 +17,8 @@ public class TweetDao {
     private String created_at;
     private String html;
     private String url;
-    private UserDao user;
+    private Integer userId;
+    private String screenName;
 
     public Long getId() {
         return id;
@@ -44,14 +48,42 @@ public class TweetDao {
         return html;
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getScreenName() {
+        return screenName;
+    }
+
+    public void setScreenName(String screenName) {
+        this.screenName = screenName;
+    }
+
     public void setHtml(String html) {
         this.html = html;
     }
 
     public String getUrl() {
-        if(StringUtils.isEmpty(this.user.getScreen_name()) || StringUtils.isEmpty(this.id)) {
+        if(StringUtils.isEmpty(this.getScreenName()) || StringUtils.isEmpty(this.getUserId())) {
             return "";
         }
-        return URL_PREFIX + this.user.screen_name + URL_POSTFIXX + this.id;
+        return URL_PREFIX + this.getScreenName() + URL_POSTFIXX + this.getId();
     }
+
+    @SuppressWarnings("unchecked")
+    @JsonProperty("user")
+    private void unpackNested(Map<String,Object> user) {
+        this.userId = (Integer) user.get("id");
+        this.screenName = (String) user.get("screen_name");
+    }
+
 }
