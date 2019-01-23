@@ -1,6 +1,7 @@
 package com.nick.cancan.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nick.cancan.exception.CancelledServiceException;
 import com.nick.cancan.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,96 +32,38 @@ public class CancelledRequestService {
     public static String FULL_ARCHIVE_URL = "https://api.twitter.com/1.1/tweets/search/fullarchive/dev.json";
 
 
-    public List<TweetDao> getCancelledTweets(AccessToken accessToken) {
+    public List<TweetDao> getCancelledTweets(AccessToken accessToken) throws CancelledServiceException {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
-
         httpHeaders.add("Authorization", "Bearer " + getBearerToken());
-
-
-
         MyQueryRequest query = queryBuilderService.buildQuery(accessToken.getScreenName());
-
         HttpEntity<MyQueryRequest> entity = new HttpEntity<>(query, httpHeaders);
-
         ResponseEntity<String> responseEntity = restTemplate.exchange(FULL_ARCHIVE_URL, HttpMethod.POST, entity, String.class);
+        List<TweetDao> tweets = mapResponseToTweets(responseEntity.getBody());
+        tweets = oembedService.getOembedTweets(tweets);
+        return tweets;
+    }
 
-        JSONObject responseArray = new JSONObject(responseEntity.getBody());
+    private List<TweetDao> mapResponseToTweets(String response) throws CancelledServiceException {
+        JSONObject responseArray = new JSONObject(response);
         JSONArray results = responseArray.getJSONArray("results");
-
         List<TweetDao> tweets = new ArrayList<>();
-
-
         ObjectMapper mapper = new ObjectMapper();
         try{
             for(int i = 0; i < results.length(); i++) {
                 tweets.add(mapper.readValue(results.getString(i), TweetDao.class));
             }
-            tweets = oembedService.getOembedTweets(tweets);
         } catch (Exception e) {
             LOGGER.error("ERROR: " , e);
+            throw new CancelledServiceException(e);
         }
-
         return tweets;
     }
 
 
-    private HttpParameter[] buildQuery(String user) {
-        HttpParameter[] httpParams = new HttpParameter[1];
-
-        String query = "";
-
-        query = query + "from:" + StringUtils.trimAllWhitespace(user) + " ";
-        query = query + " fuck";
-        HttpParameter httpParameter = new HttpParameter("q",query);
-        httpParams[0] = httpParameter;
-        return httpParams;
-
-    }
-
-    private ResultsObject mapResponse(ResponseEntity<String> response) {
+    private String getBearerToken() throws CancelledServiceException {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            ResultsObject results = mapper.readValue(response.getBody(), ResultsObject.class);
-            return results;
-        } catch(Exception e) {
-            LOGGER.error("error parsing response " + e);
-            return null;
-        }
-
-    }
-
-    private Map<String, String> getHeadersAsMap(List<HttpParameter> parameters) {
-        Map<String, String> map = new HashMap<>();
-        for(HttpParameter param : parameters) {
-            map.put(param.getName(), param.getValue());
-        }
-        return map;
-    }
-
-    private String getAuthAsParam(String token, List<HttpParameter> params) {
-        String auth = "OAuth ";
-        auth += "oauth_token=\"" + token + "\",";
-        int i = 0;
-        for(HttpParameter parameter : params) {
-            if(!StringUtils.isEmpty(parameter.getName()) && !StringUtils.isEmpty(parameter.getValue())) {
-                auth += parameter.getName() + "=\"" + parameter.getValue() + "\"";
-                if (!(i++ == params.size() - 1)) {
-                    auth += ",";
-                }
-            }
-        }
-
-
-
-        return auth;
-    }
-
-    private String getBearerToken() {
-        try {
-
-
         String key = "Uxo8KMdQZVvlZOWh0TtysW0w9";
         String secret = "cZVTXrQHnZ3FUAUKtQUA5OyK1UE8lJ3IY0NjVorVzj7UU1OcE3";
         String tokenEncoded = BASE64Encoder.encode((key+":"+secret).getBytes("UTF-8"));
@@ -142,8 +85,8 @@ public class CancelledRequestService {
         return  responseEntity.getBody().getAccess_token();
 
         } catch (Exception e) {
-
-            return null;
+            LOGGER.error("ERROR: Error generating bearer token:", e);
+            throw new CancelledServiceException(e);
         }
 
 

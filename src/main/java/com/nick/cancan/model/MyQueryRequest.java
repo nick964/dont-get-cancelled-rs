@@ -5,8 +5,12 @@ import twitter4j.QueryResult;
 public class MyQueryRequest {
     private String query;
 
-    public MyQueryRequest(String screenname){
-        this.query = "from:".concat(screenname);
+    public MyQueryRequest(String query){
+        this.query = query;
+    }
+
+    public MyQueryRequest() {
+        this.query = "";
     }
 
     public String getQuery() {

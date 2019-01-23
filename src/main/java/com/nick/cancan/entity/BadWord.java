@@ -40,4 +40,14 @@ public class BadWord {
     public void setSeverity(Integer severity) {
         this.severity = severity;
     }
+
+    public BadWord(String text, Integer sev) {
+        this.text = text;
+        this.severity = sev;
+    }
+
+    public BadWord() {
+    }
+
+
 }

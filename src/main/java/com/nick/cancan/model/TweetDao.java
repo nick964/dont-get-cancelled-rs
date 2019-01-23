@@ -17,7 +17,7 @@ public class TweetDao {
     private String created_at;
     private String html;
     private String url;
-    private Integer userId;
+    private Long userId;
     private String screenName;
 
     public Long getId() {
@@ -52,11 +52,11 @@ public class TweetDao {
         this.url = url;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -82,7 +82,8 @@ public class TweetDao {
     @SuppressWarnings("unchecked")
     @JsonProperty("user")
     private void unpackNested(Map<String,Object> user) {
-        this.userId = (Integer) user.get("id");
+        String userId = user.get("id").toString();
+        this.userId = new Long(userId);
         this.screenName = (String) user.get("screen_name");
     }
 
