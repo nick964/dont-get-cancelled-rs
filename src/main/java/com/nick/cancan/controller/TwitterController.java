@@ -39,10 +39,6 @@ public class TwitterController {
 
     RequestToken requestToken = twitter.getOAuthRequestToken("http://localhost:4200/authsuccess");
 
-
-    request.getSession().setAttribute("requestToken", requestToken);
-    request.getSession().setAttribute("twitter", twitter);
-
     return requestToken;
   }
 
@@ -52,7 +48,7 @@ public class TwitterController {
     return badWordsRepository.findAll();
   }
 
-    @CrossOrigin
+  @CrossOrigin
   @RequestMapping(value = "/success", method = RequestMethod.GET)
   public @ResponseBody
     List<TweetDao> testSuccess(@RequestParam("oauth_token") String OAuthToken,
@@ -64,6 +60,12 @@ public class TwitterController {
     twitter.setOAuthAccessToken(accessToken);
     userService.createAndSaveUser(accessToken);
     return cancelledRequestService.getCancelledTweets(accessToken);
+  }
+
+  @CrossOrigin
+  @RequestMapping(value = "/delete", method = RequestMethod.POST)
+  public void deleteTweet(@RequestBody TweetDao tweet) throws Exception {
+    cancelledRequestService.deleteTweet(tweet);
   }
 
 

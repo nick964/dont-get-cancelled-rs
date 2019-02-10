@@ -31,10 +31,19 @@ public class UserServiceImpl implements UserService {
         user.setScreenName(accessToken.getScreenName());
         user.setToken(accessToken.getToken());
         user.setTokenSecret(accessToken.getTokenSecret());
+        user.setId((int) accessToken.getUserId());
         user.setCreatedDate(new Date());
         user.setLastLogin(new Date());
         return user;
     }
 
+    @Override
+    public User getUser(Long userId) {
+        return userRepository.findByUserId(userId);
+    }
 
+    @Override
+    public User getUser(String screenName) {
+        return  userRepository.findByUsername(screenName);
+    }
 }

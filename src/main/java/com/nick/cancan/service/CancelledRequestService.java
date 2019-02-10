@@ -1,8 +1,10 @@
 package com.nick.cancan.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nick.cancan.entity.User;
 import com.nick.cancan.exception.CancelledServiceException;
 import com.nick.cancan.model.*;
+import com.nick.cancan.util.RequestBuilderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +28,17 @@ public class CancelledRequestService {
     @Autowired
     OembedService oembedService;
 
+    @Autowired
+    RequestBuilderUtil requestBuilderUtil;
+
+    @Autowired
+    UserService userService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CancelledRequestService.class);
 
-
+    public static String BEARER_URL = "https://api.twitter.com/oauth2/token";
     public static String FULL_ARCHIVE_URL = "https://api.twitter.com/1.1/tweets/search/fullarchive/dev.json";
+    public static String DELETE_URL = "https://api.twitter.com/1.1/statuses/destroy/";
 
 
     public List<TweetDao> getCancelledTweets(AccessToken accessToken) throws CancelledServiceException {
@@ -41,8 +50,20 @@ public class CancelledRequestService {
         HttpEntity<MyQueryRequest> entity = new HttpEntity<>(query, httpHeaders);
         ResponseEntity<String> responseEntity = restTemplate.exchange(FULL_ARCHIVE_URL, HttpMethod.POST, entity, String.class);
         List<TweetDao> tweets = mapResponseToTweets(responseEntity.getBody());
-        tweets = oembedService.getOembedTweets(tweets);
+        //tweets = oembedService.getOembedTweets(tweets);
         return tweets;
+    }
+
+    public void deleteTweet(TweetDao tweet) throws CancelledServiceException {
+        RestTemplate restTemplate = new RestTemplate();
+        User user = userService.getUser(tweet.getUserId());
+        HttpHeaders headers = requestBuilderUtil.buildAuthenticatedUserRequest(user.getToken());
+        String deleteUrl = DELETE_URL + tweet.getId() + ".json";
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(deleteUrl, HttpMethod.POST, entity, String.class);
+        if(!responseEntity.getStatusCode().is2xxSuccessful()) {
+            LOGGER.error("Error deleting tweet", responseEntity.getBody());
+        }
     }
 
     private List<TweetDao> mapResponseToTweets(String response) throws CancelledServiceException {
@@ -64,34 +85,15 @@ public class CancelledRequestService {
 
     private String getBearerToken() throws CancelledServiceException {
         try {
-        String key = "Uxo8KMdQZVvlZOWh0TtysW0w9";
-        String secret = "cZVTXrQHnZ3FUAUKtQUA5OyK1UE8lJ3IY0NjVorVzj7UU1OcE3";
-        String tokenEncoded = BASE64Encoder.encode((key+":"+secret).getBytes("UTF-8"));
-        String url = "https://api.twitter.com/oauth2/token";
-
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-        headers.add("Authorization", "Basic " + tokenEncoded);
-        headers.add("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-        headers.add("UserDao-Agent", "Dont Get Cancelled Application v1.0");
-        map.add("grant_type", "client_credentials");
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-
-        ResponseEntity<BearerResponse> responseEntity = restTemplate.postForEntity(url,  request, BearerResponse.class);
-
+        HttpEntity<MultiValueMap<String, String>> request = requestBuilderUtil.buildBearerRequest();
+        ResponseEntity<BearerResponse> responseEntity = restTemplate.postForEntity(BEARER_URL,  request, BearerResponse.class);
         return  responseEntity.getBody().getAccess_token();
-
         } catch (Exception e) {
             LOGGER.error("ERROR: Error generating bearer token:", e);
             throw new CancelledServiceException(e);
         }
-
-
     }
-
-
 
 }

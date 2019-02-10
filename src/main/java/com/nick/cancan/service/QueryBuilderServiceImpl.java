@@ -25,6 +25,7 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
         }
         MyQueryRequest req = new MyQueryRequest();
         String q = req.getQuery();
+        q = q.concat("from:").concat(screenname).concat(" ");
 
         List<BadWord> badWords = badWordsRepository.findAllWithLimit();
 
@@ -37,10 +38,11 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
         }
         //for the last word, don't add 'OR'
         //also add the 'from'
-        q = q.concat(nextWord.getText()).concat(" from:").concat(screenname);
-
+        q = q.concat(nextWord.getText());
         req.setQuery(q);
 
         return req;
     }
+
+
 }
