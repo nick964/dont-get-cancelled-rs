@@ -23,26 +23,36 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
         if(StringUtils.isEmpty(screenname)) {
             //TODO: log and throw an error
         }
+
         MyQueryRequest req = new MyQueryRequest();
         String q = req.getQuery();
-        q = q.concat("from:").concat(screenname).concat(" ");
+        q = q.concat("(");
 
         List<BadWord> badWords = badWordsRepository.findAllWithLimit();
-
         Iterator iterator = badWords.iterator();
         BadWord nextWord = (BadWord) iterator.next();
-
         while(iterator.hasNext()) {
-            q = nextWord.getText().concat(" OR ").concat(q);
+            q = q.concat(nextWord.getText()).concat(" OR ");
             nextWord = (BadWord) iterator.next();
         }
         //for the last word, don't add 'OR'
         //also add the 'from'
-        q = q.concat(nextWord.getText());
+        q = q.concat(nextWord.getText()).concat(") ");
+
+        //append fund operator
+        q = q.concat(buildFromOperation(screenname));
+
+        //negate retweets
+        //TODO: unavailable in sandbox version of application, upgrade to paid?
+        //q = q.concat(" -is:retweet ");
+
         req.setQuery(q);
 
         return req;
     }
 
+    private String buildFromOperation(String screenname) {
+        return "from:".concat(screenname);
+    }
 
 }

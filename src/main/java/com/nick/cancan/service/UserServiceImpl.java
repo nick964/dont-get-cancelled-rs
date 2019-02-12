@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
         user.setScreenName(accessToken.getScreenName());
         user.setToken(accessToken.getToken());
         user.setTokenSecret(accessToken.getTokenSecret());
-        user.setId((int) accessToken.getUserId());
+        user.setId( accessToken.getUserId());
         user.setCreatedDate(new Date());
         user.setLastLogin(new Date());
         return user;
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(String screenName) {
+    public User getUserByScreenName(String screenName) {
         return  userRepository.findByUsername(screenName);
     }
 }

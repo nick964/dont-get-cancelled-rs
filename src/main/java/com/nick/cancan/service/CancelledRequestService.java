@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.social.twitter.api.Tweet;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -42,7 +43,6 @@ public class CancelledRequestService {
 
 
     public List<TweetDao> getCancelledTweets(AccessToken accessToken) throws CancelledServiceException {
-
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + getBearerToken());
@@ -50,20 +50,18 @@ public class CancelledRequestService {
         HttpEntity<MyQueryRequest> entity = new HttpEntity<>(query, httpHeaders);
         ResponseEntity<String> responseEntity = restTemplate.exchange(FULL_ARCHIVE_URL, HttpMethod.POST, entity, String.class);
         List<TweetDao> tweets = mapResponseToTweets(responseEntity.getBody());
-        //tweets = oembedService.getOembedTweets(tweets);
+        tweets = oembedService.getOembedTweets(tweets);
         return tweets;
     }
 
-    public void deleteTweet(TweetDao tweet) throws CancelledServiceException {
-        RestTemplate restTemplate = new RestTemplate();
-        User user = userService.getUser(tweet.getUserId());
-        HttpHeaders headers = requestBuilderUtil.buildAuthenticatedUserRequest(user.getToken());
-        String deleteUrl = DELETE_URL + tweet.getId() + ".json";
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(deleteUrl, HttpMethod.POST, entity, String.class);
-        if(!responseEntity.getStatusCode().is2xxSuccessful()) {
-            LOGGER.error("Error deleting tweet", responseEntity.getBody());
-        }
+    public void deleteTweet(TweetDao tweet) throws Exception {
+        User user = userService.getUser(Long.parseLong(tweet.getUserId()));
+        TwitterFactory twitterFactory = new TwitterFactory();
+        AccessToken token = new AccessToken(user.getToken(), user.getTokenSecret());
+        Twitter twitter = twitterFactory.getInstance();
+        twitter.setOAuthAccessToken(token);
+        Long tweetId = Long.parseLong(tweet.getId());
+        twitter.tweets().destroyStatus(tweetId);
     }
 
     private List<TweetDao> mapResponseToTweets(String response) throws CancelledServiceException {

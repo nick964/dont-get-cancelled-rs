@@ -32,6 +32,7 @@ dependencies {
   testImplementation('org.springframework.boot:spring-boot-starter-test')
   compile group: 'org.twitter4j', name: 'twitter4j-core', version: '4.0.7'
   compile "org.springframework.social:spring-social-twitter:1.1.0.RELEASE"
+  compile "org.springframework.boot:spring-boot-configuration-processor"
   compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
 
 

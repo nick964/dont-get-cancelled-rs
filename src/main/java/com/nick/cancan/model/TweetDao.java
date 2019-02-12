@@ -12,19 +12,19 @@ public class TweetDao {
     private static  String URL_PREFIX = "https://twitter.com/";
     private static  String URL_POSTFIXX = "/status/";
 
-    private Long id;
+    private String id;
     private String text;
     private String created_at;
     private String html;
     private String url;
-    private Long userId;
+    private String userId;
     private String screenName;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -52,11 +52,11 @@ public class TweetDao {
         this.url = url;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -82,8 +82,7 @@ public class TweetDao {
     @SuppressWarnings("unchecked")
     @JsonProperty("user")
     private void unpackNested(Map<String,Object> user) {
-        String userId = user.get("id").toString();
-        this.userId = new Long(userId);
+        this.userId= user.get("id").toString();
         this.screenName = (String) user.get("screen_name");
     }
 

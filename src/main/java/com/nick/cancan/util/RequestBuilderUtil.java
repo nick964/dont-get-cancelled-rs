@@ -17,20 +17,22 @@ public class RequestBuilderUtil {
 
 
     public HttpEntity<MultiValueMap<String, String>> buildBearerRequest() throws Exception {
-            String tokenEncoded = BASE64Encoder.encode((twitter4jProperties.getOauth().getConsumerKey() + ":" + twitter4jProperties.getOauth().getConsumerSecret()).getBytes("UTF-8"));
-            MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-            MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-            headers.add("Authorization", "Basic " + tokenEncoded);
-            headers.add("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-            headers.add("UserDao-Agent", "Dont Get Cancelled Application v1.0");
-            map.add("grant_type", "client_credentials");
-            return new HttpEntity<>(map, headers);
+        String tokenEncoded = BASE64Encoder.encode((twitter4jProperties.getOauth().getConsumerKey() + ":" + twitter4jProperties.getOauth().getConsumerSecret()).getBytes("UTF-8"));
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Basic " + tokenEncoded);
+        headers.add("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        headers.add("UserDao-Agent", "Dont Get Cancelled Application v1.0");
+        map.add("grant_type", "client_credentials");
+        return new HttpEntity<>(map, headers);
     }
 
     public HttpHeaders buildAuthenticatedUserRequest(String token) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("oauth_consumer_key", twitter4jProperties.getOauth().getConsumerKey());
         httpHeaders.add("oauth_token", token);
+
+
         return httpHeaders;
     }
 

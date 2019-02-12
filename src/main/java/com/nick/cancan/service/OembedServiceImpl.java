@@ -22,7 +22,7 @@ public class OembedServiceImpl implements  OembedService {
         Twitter twitter = TwitterFactory.getSingleton();
         try {
             for (TweetDao tweet : tweets) {
-                OEmbedRequest req = new OEmbedRequest(tweet.getId(), tweet.getUrl());
+                OEmbedRequest req = new OEmbedRequest(Long.parseLong(tweet.getId()), tweet.getUrl());
                 OEmbed oEmbed = twitter.tweets().getOEmbed(req);
                 tweet.setHtml(oEmbed.getHtml());
             }

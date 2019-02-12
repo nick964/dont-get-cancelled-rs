@@ -15,9 +15,9 @@ public interface UserService {
 
     User createUser(AccessToken accessToken);
 
-    User getUser(Long userId);
+    User getUserByScreenName(String screen_name);
 
-    User getUser(String screenName);
+    User getUser(Long userId);
 
 
 }
