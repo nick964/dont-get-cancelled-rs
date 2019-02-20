@@ -40,8 +40,8 @@ public class Twitter4jAutoConfig {
         cb.setDebugEnabled(properties.isDebug())
                 .setOAuthConsumerKey(properties.getOauth().getConsumerKey())
                 .setOAuthConsumerSecret(properties.getOauth().getConsumerSecret())
-                .setOAuthAccessToken(properties.getOauth().getAccessToken())
-                .setOAuthAccessTokenSecret(properties.getOauth().getAccessTokenSecret());
+                .setOAuthAccessToken(null)
+                .setOAuthAccessTokenSecret(null);
         TwitterFactory tf = new TwitterFactory(cb.build());
         return tf;
     }
