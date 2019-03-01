@@ -10,11 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.social.twitter.api.Tweet;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import twitter4j.*;
 import twitter4j.auth.AccessToken;
@@ -42,7 +39,7 @@ public class CancelledRequestService {
     public static String DELETE_URL = "https://api.twitter.com/1.1/statuses/destroy/";
 
 
-    public List<TweetDao> getCancelledTweets(AccessToken accessToken) throws CancelledServiceException {
+    public List<TweetDao> getCancelledTweets(AccessToken accessToken, Twitter twitter) throws CancelledServiceException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + getBearerToken());
@@ -50,7 +47,7 @@ public class CancelledRequestService {
         HttpEntity<MyQueryRequest> entity = new HttpEntity<>(query, httpHeaders);
         ResponseEntity<String> responseEntity = restTemplate.exchange(FULL_ARCHIVE_URL, HttpMethod.POST, entity, String.class);
         List<TweetDao> tweets = mapResponseToTweets(responseEntity.getBody());
-        tweets = oembedService.getOembedTweets(tweets);
+        tweets = oembedService.getOembedTweets(twitter, tweets);
         return tweets;
     }
 

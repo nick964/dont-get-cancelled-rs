@@ -18,8 +18,7 @@ public class OembedServiceImpl implements  OembedService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OembedServiceImpl.class);
 
     @Override
-    public List<TweetDao> getOembedTweets(List<TweetDao> tweets) throws CancelledServiceException {
-        Twitter twitter = TwitterFactory.getSingleton();
+    public List<TweetDao> getOembedTweets(Twitter twitter, List<TweetDao> tweets) throws CancelledServiceException {
         try {
             for (TweetDao tweet : tweets) {
                 OEmbedRequest req = new OEmbedRequest(Long.parseLong(tweet.getId()), tweet.getUrl());

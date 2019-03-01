@@ -22,6 +22,8 @@ public class UserServiceImpl implements UserService {
             User user = createUser(accessToken);
             return userRepository.save(user);
         } else {
+            existingUser.setLastLogin(new Date());
+            userRepository.save(existingUser);
           return existingUser;
         }
     }

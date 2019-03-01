@@ -2,6 +2,7 @@ package com.nick.cancan.controller;
 
 
 import com.nick.cancan.config.EnvironmentProps;
+import com.nick.cancan.model.TokenDao;
 import com.nick.cancan.model.TweetDao;
 import com.nick.cancan.repository.BadWordsRepository;
 import com.nick.cancan.service.CancelledRequestService;
@@ -41,17 +42,18 @@ public class TwitterController {
 
 
 
-  @CrossOrigin(origins = "http://localhost:4200")
-  @RequestMapping("/")
-  public RequestToken getTweetsFromTwit(HttpServletRequest request, HttpSession session) throws Exception {
-    Twitter twitter = twitterFactory.getInstance();
-
+  @CrossOrigin
+  @RequestMapping(value = "/", method = RequestMethod.GET)
+  public TokenDao getTweetsFromTwit(HttpServletRequest request, HttpSession session) throws Exception {
     if(!session.isNew()) {
-      session.invalidate();
+      Twitter twitterLoggedIn = (Twitter) session.getAttribute("twitter");
+      AccessToken accessToken = twitterLoggedIn.getOAuthAccessToken();
+      return new TokenDao(accessToken, "TRUE");
     }
+    Twitter twitter = twitterFactory.getInstance();
     RequestToken token = twitter.getOAuthRequestToken(environmentProps.getCallbackUrl());
-    session.setAttribute("twitter", twitter);
-    return token;
+    TokenDao tokenDao = new TokenDao(token, "FALSE");
+    return tokenDao;
   }
 
   @CrossOrigin
@@ -61,11 +63,11 @@ public class TwitterController {
                                @RequestParam("oauth_verifier") String OAuthVerifier,
                                HttpSession session) throws Exception {
 
-    Twitter twitter = (Twitter) session.getAttribute("twitter");
+    Twitter twitter = twitterFactory.getInstance();
     AccessToken accessToken = twitter.getOAuthAccessToken(OAuthVerifier);
     twitter.setOAuthAccessToken(accessToken);
     userService.createAndSaveUser(accessToken);
-    return cancelledRequestService.getCancelledTweets(accessToken);
+    return cancelledRequestService.getCancelledTweets(accessToken, twitter);
   }
 
   @CrossOrigin
@@ -80,6 +82,7 @@ public class TwitterController {
   public void deleteTweetTest(@RequestBody TweetDao tweet) throws Exception {
 
   }
+
 
 
 
