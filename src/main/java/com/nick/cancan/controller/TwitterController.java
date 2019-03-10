@@ -1,10 +1,14 @@
 package com.nick.cancan.controller;
 
 
+import com.google.api.Http;
 import com.nick.cancan.config.EnvironmentProps;
+import com.nick.cancan.entity.TokenSession;
+import com.nick.cancan.model.FireCreds;
 import com.nick.cancan.model.TokenDao;
 import com.nick.cancan.model.TweetDao;
 import com.nick.cancan.repository.BadWordsRepository;
+import com.nick.cancan.repository.TokenSessionRepository;
 import com.nick.cancan.service.CancelledRequestService;
 import com.nick.cancan.service.UserServiceImpl;
 import org.slf4j.LoggerFactory;
@@ -16,6 +20,7 @@ import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -40,11 +45,15 @@ public class TwitterController {
   @Autowired
   TwitterFactory twitterFactory;
 
+  @Autowired
+  TokenSessionRepository tokenSessionRepository;
+
 
 
   @CrossOrigin
   @RequestMapping(value = "/", method = RequestMethod.GET)
-  public TokenDao getTweetsFromTwit(HttpServletRequest request, HttpSession session) throws Exception {
+  public TokenDao getTweetsFromTwit(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    HttpSession session = request.getSession();
     if(!session.isNew()) {
       Twitter twitterLoggedIn = (Twitter) session.getAttribute("twitter");
       AccessToken accessToken = twitterLoggedIn.getOAuthAccessToken();
@@ -52,6 +61,9 @@ public class TwitterController {
     }
     Twitter twitter = twitterFactory.getInstance();
     RequestToken token = twitter.getOAuthRequestToken(environmentProps.getCallbackUrl());
+    session.setAttribute("reqToken", token);
+    session.setAttribute("twi", twitter);
+    tokenSessionRepository.save(new TokenSession(session, token.getToken()));
     TokenDao tokenDao = new TokenDao(token, "FALSE");
     return tokenDao;
   }
@@ -61,13 +73,24 @@ public class TwitterController {
   public @ResponseBody
     List<TweetDao> testSuccess(@RequestParam("oauth_token") String OAuthToken,
                                @RequestParam("oauth_verifier") String OAuthVerifier,
-                               HttpSession session) throws Exception {
-
-    Twitter twitter = twitterFactory.getInstance();
-    AccessToken accessToken = twitter.getOAuthAccessToken(OAuthVerifier);
+                               HttpServletRequest request) throws Exception {
+    HttpSession session = request.getSession();
+    Twitter twitter = (Twitter) session.getAttribute("twi");
+    RequestToken token = (RequestToken) session.getAttribute("reqToken");
+    //AccessToken accessToken = twitter.getOAuthAccessToken(token);
+    AccessToken accessToken = twitter.getOAuthAccessToken(token, OAuthVerifier);
     twitter.setOAuthAccessToken(accessToken);
     userService.createAndSaveUser(accessToken);
     return cancelledRequestService.getCancelledTweets(accessToken, twitter);
+  }
+
+  @CrossOrigin
+  @RequestMapping(value = "/getTweets", method = RequestMethod.POST)
+  public @ResponseBody
+  List<TweetDao> getTweets(@RequestBody FireCreds fireCredentials) throws Exception {
+    AccessToken token = new AccessToken(fireCredentials.getAccessToken(), fireCredentials.getSecret());
+    Twitter twitter = twitterFactory.getInstance(token);
+    return cancelledRequestService.getCancelledTweets(token, twitter);
   }
 
   @CrossOrigin
