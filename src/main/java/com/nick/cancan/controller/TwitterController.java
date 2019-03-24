@@ -11,8 +11,11 @@ import com.nick.cancan.repository.BadWordsRepository;
 import com.nick.cancan.repository.TokenSessionRepository;
 import com.nick.cancan.service.CancelledRequestService;
 import com.nick.cancan.service.UserServiceImpl;
+import com.nick.cancan.util.CancelledSessionListener;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.session.Session;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
@@ -22,6 +25,7 @@ import twitter4j.auth.RequestToken;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -32,6 +36,9 @@ public class TwitterController {
 
   @Autowired
   CancelledRequestService cancelledRequestService;
+
+  @Autowired
+  CancelledSessionListener cancelledSessionListener;
 
   @Autowired
   BadWordsRepository badWordsRepository;
@@ -47,6 +54,8 @@ public class TwitterController {
 
   @Autowired
   TokenSessionRepository tokenSessionRepository;
+
+  private HashMap<String, HttpSession> sessionHashMap = new HashMap<>();
 
 
 
@@ -64,6 +73,7 @@ public class TwitterController {
     session.setAttribute("reqToken", token);
     session.setAttribute("twi", twitter);
     tokenSessionRepository.save(new TokenSession(session, token.getToken()));
+    sessionHashMap.put(session.getId(), session);
     TokenDao tokenDao = new TokenDao(token, "FALSE");
     return tokenDao;
   }
@@ -74,7 +84,11 @@ public class TwitterController {
     List<TweetDao> testSuccess(@RequestParam("oauth_token") String OAuthToken,
                                @RequestParam("oauth_verifier") String OAuthVerifier,
                                HttpServletRequest request) throws Exception {
-    HttpSession session = request.getSession();
+    TokenSession tokenSession = tokenSessionRepository.findByReqToken(OAuthToken);
+    if(StringUtils.isEmpty(tokenSession)) {
+      throw new Exception("Missing required session attribute to be here");
+    }
+    HttpSession session = sessionHashMap.get(tokenSession.getSessionId());
     Twitter twitter = (Twitter) session.getAttribute("twi");
     RequestToken token = (RequestToken) session.getAttribute("reqToken");
     //AccessToken accessToken = twitter.getOAuthAccessToken(token);
