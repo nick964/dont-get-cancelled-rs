@@ -1,7 +1,6 @@
 package com.nick.cancan.controller;
 
 
-import com.google.api.Http;
 import com.nick.cancan.config.EnvironmentProps;
 import com.nick.cancan.entity.TokenSession;
 import com.nick.cancan.model.FireCreds;
@@ -12,9 +11,9 @@ import com.nick.cancan.repository.TokenSessionRepository;
 import com.nick.cancan.service.CancelledRequestService;
 import com.nick.cancan.service.UserServiceImpl;
 import com.nick.cancan.util.CancelledSessionListener;
+import jdk.nashorn.internal.parser.Token;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.session.Session;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import twitter4j.Twitter;
@@ -25,6 +24,7 @@ import twitter4j.auth.RequestToken;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -70,10 +70,8 @@ public class TwitterController {
     }
     Twitter twitter = twitterFactory.getInstance();
     RequestToken token = twitter.getOAuthRequestToken(environmentProps.getCallbackUrl());
-    session.setAttribute("reqToken", token);
-    session.setAttribute("twi", twitter);
-    tokenSessionRepository.save(new TokenSession(session, token.getToken()));
-    sessionHashMap.put(session.getId(), session);
+
+    tokenSessionRepository.save(new TokenSession(token.getToken(), token.getTokenSecret()));
     TokenDao tokenDao = new TokenDao(token, "FALSE");
     return tokenDao;
   }
@@ -88,11 +86,9 @@ public class TwitterController {
     if(StringUtils.isEmpty(tokenSession)) {
       throw new Exception("Missing required session attribute to be here");
     }
-    HttpSession session = sessionHashMap.get(tokenSession.getSessionId());
-    Twitter twitter = (Twitter) session.getAttribute("twi");
-    RequestToken token = (RequestToken) session.getAttribute("reqToken");
-    //AccessToken accessToken = twitter.getOAuthAccessToken(token);
-    AccessToken accessToken = twitter.getOAuthAccessToken(token, OAuthVerifier);
+    Twitter twitter = twitterFactory.getInstance();
+    RequestToken requestToken = new RequestToken(tokenSession.getReqToken(), tokenSession.getReqSecret());
+    AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, OAuthVerifier);
     twitter.setOAuthAccessToken(accessToken);
     userService.createAndSaveUser(accessToken);
     return cancelledRequestService.getCancelledTweets(accessToken, twitter);
@@ -114,11 +110,7 @@ public class TwitterController {
     cancelledRequestService.deleteTweet(tweet);
   }
 
-  @CrossOrigin
-  @RequestMapping(value = "/deleteTest", method = RequestMethod.POST)
-  public void deleteTweetTest(@RequestBody TweetDao tweet) throws Exception {
 
-  }
 
 
 
