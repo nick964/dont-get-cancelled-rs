@@ -15,7 +15,7 @@ public class TokenSession {
     private Long id;
 
     @Column(name="PRIMARY_ID")
-    private String sessionId;
+    private String reqSecret;
 
     @Column(name="REQ_TOKEN")
     private String reqToken;
@@ -27,19 +27,20 @@ public class TokenSession {
     private Long expiredTime;
 
 
-    public String getSessionId() {
-        return sessionId;
+    public String getReqSecret() {
+        return reqSecret;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    private void setReqSecret(String reqSecret) {
+        this.reqSecret = reqSecret;
     }
+
 
     public String getReqToken() {
         return reqToken;
     }
 
-    public void setReqToken(String reqToken) {
+    private void setReqToken(String reqToken) {
         this.reqToken = reqToken;
     }
 
@@ -47,7 +48,7 @@ public class TokenSession {
         return created;
     }
 
-    public void setCreated(Long created) {
+    private void setCreated(Long created) {
         this.created = created;
     }
 
@@ -65,8 +66,13 @@ public class TokenSession {
 
     public TokenSession(HttpSession session, String reqToken) {
         this.setCreated(new Date().getTime());
-        this.setSessionId(session.getId());
+        this.setReqSecret(session.getId());
         this.setReqToken(reqToken);
+    }
+    public TokenSession(String reqToken, String reqSecret) {
+        this.setReqToken(reqToken);
+        this.setReqSecret(reqSecret);
+        this.setCreated(new Date().getTime());
     }
 
     public Long getId() {
@@ -76,4 +82,6 @@ public class TokenSession {
     public void setId(Long id) {
         this.id = id;
     }
+
+
 }
