@@ -10,8 +10,6 @@ import com.nick.cancan.repository.BadWordsRepository;
 import com.nick.cancan.repository.TokenSessionRepository;
 import com.nick.cancan.service.CancelledRequestService;
 import com.nick.cancan.service.UserServiceImpl;
-import com.nick.cancan.util.CancelledSessionListener;
-import jdk.nashorn.internal.parser.Token;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -20,12 +18,9 @@ import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -36,9 +31,6 @@ public class TwitterController {
 
   @Autowired
   CancelledRequestService cancelledRequestService;
-
-  @Autowired
-  CancelledSessionListener cancelledSessionListener;
 
   @Autowired
   BadWordsRepository badWordsRepository;
@@ -55,13 +47,12 @@ public class TwitterController {
   @Autowired
   TokenSessionRepository tokenSessionRepository;
 
-  private HashMap<String, HttpSession> sessionHashMap = new HashMap<>();
 
 
 
   @CrossOrigin
   @RequestMapping(value = "/", method = RequestMethod.GET)
-  public TokenDao getTweetsFromTwit(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  public TokenDao getTweetsFromTwit(HttpServletRequest request) throws Exception {
     HttpSession session = request.getSession();
     if(!session.isNew()) {
       Twitter twitterLoggedIn = (Twitter) session.getAttribute("twitter");
