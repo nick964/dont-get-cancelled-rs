@@ -101,6 +101,12 @@ public class TwitterController {
   }
 
 
+  @CrossOrigin
+  @RequestMapping(value = "/herokuTest", method = RequestMethod.GET)
+  public @ResponseBody String testDeploy() throws Exception {
+    return  "SUCCESS";
+  }
+
 
 
 
