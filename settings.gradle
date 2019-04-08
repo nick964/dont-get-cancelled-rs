@@ -1,1 +1,3 @@
-rootProject.name = 'cancan'
+rootProject.name = 'cancelled'
+
+include 'cancelled-api', 'cancelled-ui'
