@@ -221,32 +221,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
 /* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ "./node_modules/@ng-bootstrap/ng-bootstrap/fesm5/ng-bootstrap.js");
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
-/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
-/* harmony import */ var _auth_auth_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./auth/auth.component */ "./src/app/auth/auth.component.ts");
-/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
-/* harmony import */ var _ui_ui_module__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./ui/ui.module */ "./src/app/ui/ui.module.ts");
-/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/platform-browser/animations */ "./node_modules/@angular/platform-browser/fesm5/animations.js");
-/* harmony import */ var _overview_list_overview_list_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./overview-list/overview-list.component */ "./src/app/overview-list/overview-list.component.ts");
-/* harmony import */ var angularfire2__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! angularfire2 */ "./node_modules/angularfire2/index.js");
-/* harmony import */ var angularfire2__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(angularfire2__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var angularfire2_database__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! angularfire2/database */ "./node_modules/angularfire2/database/index.js");
-/* harmony import */ var angularfire2_database__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(angularfire2_database__WEBPACK_IMPORTED_MODULE_13__);
-/* harmony import */ var angularfire2_auth__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! angularfire2/auth */ "./node_modules/angularfire2/auth/index.js");
-/* harmony import */ var angularfire2_auth__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(angularfire2_auth__WEBPACK_IMPORTED_MODULE_14__);
-/* harmony import */ var _app_fireauth_service__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../app/fireauth.service */ "./src/app/fireauth.service.ts");
-/* harmony import */ var _http_error_interceptor__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./http-error.interceptor */ "./src/app/http-error.interceptor.ts");
-/* harmony import */ var _about_about_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./about/about.component */ "./src/app/about/about.component.ts");
+/* harmony import */ var _auth_auth_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./auth/auth.component */ "./src/app/auth/auth.component.ts");
+/* harmony import */ var _login_login_component__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./login/login.component */ "./src/app/login/login.component.ts");
+/* harmony import */ var _ui_ui_module__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ui/ui.module */ "./src/app/ui/ui.module.ts");
+/* harmony import */ var _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/platform-browser/animations */ "./node_modules/@angular/platform-browser/fesm5/animations.js");
+/* harmony import */ var _overview_list_overview_list_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./overview-list/overview-list.component */ "./src/app/overview-list/overview-list.component.ts");
+/* harmony import */ var _http_error_interceptor__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./http-error.interceptor */ "./src/app/http-error.interceptor.ts");
+/* harmony import */ var _about_about_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./about/about.component */ "./src/app/about/about.component.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-
-
-
-
-
 
 
 
@@ -267,27 +254,23 @@ var AppModule = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
             declarations: [
                 _app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"],
-                _auth_auth_component__WEBPACK_IMPORTED_MODULE_7__["AuthComponent"],
-                _login_login_component__WEBPACK_IMPORTED_MODULE_8__["LoginComponent"],
-                _overview_list_overview_list_component__WEBPACK_IMPORTED_MODULE_11__["OverviewListComponent"],
-                _about_about_component__WEBPACK_IMPORTED_MODULE_17__["AboutComponent"]
+                _auth_auth_component__WEBPACK_IMPORTED_MODULE_6__["AuthComponent"],
+                _login_login_component__WEBPACK_IMPORTED_MODULE_7__["LoginComponent"],
+                _overview_list_overview_list_component__WEBPACK_IMPORTED_MODULE_10__["OverviewListComponent"],
+                _about_about_component__WEBPACK_IMPORTED_MODULE_12__["AboutComponent"]
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClientModule"],
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_5__["AppRoutingModule"],
-                _ui_ui_module__WEBPACK_IMPORTED_MODULE_9__["UiModule"],
+                _ui_ui_module__WEBPACK_IMPORTED_MODULE_8__["UiModule"],
                 _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_4__["NgbModule"],
-                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_10__["BrowserAnimationsModule"],
-                angularfire2__WEBPACK_IMPORTED_MODULE_12__["AngularFireModule"].initializeApp(_environments_environment__WEBPACK_IMPORTED_MODULE_6__["environment"].firebase, 'angular-auth-firebase'),
-                angularfire2_database__WEBPACK_IMPORTED_MODULE_13__["AngularFireDatabaseModule"],
-                angularfire2_auth__WEBPACK_IMPORTED_MODULE_14__["AngularFireAuthModule"]
+                _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_9__["BrowserAnimationsModule"]
             ],
             providers: [
-                _app_fireauth_service__WEBPACK_IMPORTED_MODULE_15__["FireauthService"],
                 {
                     provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HTTP_INTERCEPTORS"],
-                    useClass: _http_error_interceptor__WEBPACK_IMPORTED_MODULE_16__["HttpErrorInterceptor"],
+                    useClass: _http_error_interceptor__WEBPACK_IMPORTED_MODULE_11__["HttpErrorInterceptor"],
                     multi: true
                 }
             ],
@@ -479,9 +462,8 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var CancelledtweetService = /** @class */ (function () {
     function CancelledtweetService(http) {
         this.http = http;
-        this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiUrl;
-        this.apiUrlTweets = this.apiUrl + 'success';
-        this.apiUrlDelete = this.apiUrl + 'delete';
+        this.apiUrlTweets = src_environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiUrl + 'success';
+        this.apiUrlDelete = src_environments_environment__WEBPACK_IMPORTED_MODULE_4__["environment"].apiUrl + 'delete';
     }
     CancelledtweetService.prototype.getCancelledTweets = function (oAuthToken, oAuthVerifier) {
         var params = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpParams"]().set("oauth_token", oAuthToken).set('oauth_verifier', oAuthVerifier);
@@ -525,57 +507,6 @@ var CancelledtweetService = /** @class */ (function () {
         __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]])
     ], CancelledtweetService);
     return CancelledtweetService;
-}());
-
-
-
-/***/ }),
-
-/***/ "./src/app/fireauth.service.ts":
-/*!*************************************!*\
-  !*** ./src/app/fireauth.service.ts ***!
-  \*************************************/
-/*! exports provided: FireauthService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FireauthService", function() { return FireauthService; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var angularfire2_auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! angularfire2/auth */ "./node_modules/angularfire2/auth/index.js");
-/* harmony import */ var angularfire2_auth__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(angularfire2_auth__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/index.cjs.js");
-/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(firebase_app__WEBPACK_IMPORTED_MODULE_3__);
-var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-
-
-
-
-var FireauthService = /** @class */ (function () {
-    function FireauthService(_firebaseAuth, router) {
-        this._firebaseAuth = _firebaseAuth;
-        this.router = router;
-        this.user = _firebaseAuth.authState;
-    }
-    FireauthService.prototype.signInWithTwitter = function () {
-        return this._firebaseAuth.auth.signInWithPopup(new firebase_app__WEBPACK_IMPORTED_MODULE_3__["auth"].TwitterAuthProvider());
-    };
-    FireauthService = __decorate([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
-            providedIn: 'root'
-        }),
-        __metadata("design:paramtypes", [angularfire2_auth__WEBPACK_IMPORTED_MODULE_2__["AngularFireAuth"], _angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"]])
-    ], FireauthService);
-    return FireauthService;
 }());
 
 
@@ -657,7 +588,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _login_login_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../login/login.service */ "./src/app/login/login.service.ts");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var _cancelledtweet_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../cancelledtweet.service */ "./src/app/cancelledtweet.service.ts");
-/* harmony import */ var _fireauth_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../fireauth.service */ "./src/app/fireauth.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -671,23 +601,14 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
-
 var LoginComponent = /** @class */ (function () {
-    function LoginComponent(http, loginService, fireAuthService, cancelledTweetService) {
+    function LoginComponent(http, loginService, cancelledTweetService) {
         this.http = http;
         this.loginService = loginService;
-        this.fireAuthService = fireAuthService;
         this.cancelledTweetService = cancelledTweetService;
         this.user = null;
     }
     LoginComponent.prototype.ngOnInit = function () {
-    };
-    LoginComponent.prototype.signInWithTwitter = function () {
-        this.fireAuthService.signInWithTwitter().then(function (res) {
-            var credential = res.credential;
-            console.log(credential);
-        })
-            .catch(function (err) { return console.log(err); });
     };
     LoginComponent.prototype.callToken = function () {
         console.log('called function');
@@ -710,8 +631,7 @@ var LoginComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./login.component.html */ "./src/app/login/login.component.html"),
             styles: [__webpack_require__(/*! ./login.component.css */ "./src/app/login/login.component.css")]
         }),
-        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], _login_login_service__WEBPACK_IMPORTED_MODULE_1__["LoginService"], _fireauth_service__WEBPACK_IMPORTED_MODULE_4__["FireauthService"],
-            _cancelledtweet_service__WEBPACK_IMPORTED_MODULE_3__["CancelledtweetService"]])
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], _login_login_service__WEBPACK_IMPORTED_MODULE_1__["LoginService"], _cancelledtweet_service__WEBPACK_IMPORTED_MODULE_3__["CancelledtweetService"]])
     ], LoginComponent);
     return LoginComponent;
 }());
@@ -752,7 +672,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 var LoginService = /** @class */ (function () {
     function LoginService(http) {
         this.http = http;
-        this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].apiUrl;
+        this.apiUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].apiUrl + 'getToken';
         this.httpOptions = {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]({
                 'Content-Type': 'application/json',
@@ -1108,15 +1028,7 @@ __webpack_require__.r(__webpack_exports__);
 // The list of file replacements can be found in `angular.json`.
 var environment = {
     production: false,
-    apiUrl: 'http://localhost:8080/',
-    firebase: {
-        apiKey: "AIzaSyBiGKMw47VLVpwUmKAjl9EfRWfP3cj9vcM",
-        authDomain: "dont-get-cancelled.firebaseapp.com",
-        databaseURL: "https://dont-get-cancelled.firebaseio.com",
-        projectId: "dont-get-cancelled",
-        storageBucket: "dont-get-cancelled.appspot.com",
-        messagingSenderId: "1011195609454"
-    }
+    apiUrl: 'http://localhost:8080/api/cancelled/'
 };
 /*
  * For easier debugging in development mode, you can import the following file

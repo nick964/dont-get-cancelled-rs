@@ -16,5 +16,7 @@ jar.dependsOn 'npm_run_build'
 
 // 4
 jar {
-  from 'dist/cancelled-ui' into 'static'
+  from 'dist/app-can' into 'static'
+
 }
+

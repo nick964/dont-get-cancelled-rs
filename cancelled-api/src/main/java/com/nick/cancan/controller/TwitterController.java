@@ -24,6 +24,7 @@ import java.util.List;
 
 
 @RestController
+@RequestMapping(value = "/api/cancelled", produces = "application/json")
 public class TwitterController {
 
   private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TwitterController.class);
@@ -47,23 +48,13 @@ public class TwitterController {
   TokenSessionRepository tokenSessionRepository;
 
 
-
-
   @CrossOrigin
   @RequestMapping(value = "/getToken", method = RequestMethod.GET)
   public TokenDao getTweetsFromTwit(HttpServletRequest request) throws Exception {
-    HttpSession session = request.getSession();
-    if(!session.isNew()) {
-      Twitter twitterLoggedIn = (Twitter) session.getAttribute("twitter");
-      AccessToken accessToken = twitterLoggedIn.getOAuthAccessToken();
-      return new TokenDao(accessToken, "TRUE");
-    }
     Twitter twitter = twitterFactory.getInstance();
     RequestToken token = twitter.getOAuthRequestToken(environmentProps.getCallbackUrl());
-
     tokenSessionRepository.save(new TokenSession(token.getToken(), token.getTokenSecret()));
-    TokenDao tokenDao = new TokenDao(token, "FALSE");
-    return tokenDao;
+    return new TokenDao(token, "FALSE");
   }
 
   @CrossOrigin
@@ -83,16 +74,6 @@ public class TwitterController {
     userService.createAndSaveUser(accessToken);
     return cancelledRequestService.getCancelledTweets(accessToken, twitter);
   }
-
-  @CrossOrigin
-  @RequestMapping(value = "/getTweets", method = RequestMethod.POST)
-  public @ResponseBody
-  List<TweetDao> getTweets(@RequestBody FireCreds fireCredentials) throws Exception {
-    AccessToken token = new AccessToken(fireCredentials.getAccessToken(), fireCredentials.getSecret());
-    Twitter twitter = twitterFactory.getInstance(token);
-    return cancelledRequestService.getCancelledTweets(token, twitter);
-  }
-
   @CrossOrigin
   @RequestMapping(value = "/delete", method = RequestMethod.POST)
   public void deleteTweet(@RequestBody TweetDao tweet) throws Exception {
