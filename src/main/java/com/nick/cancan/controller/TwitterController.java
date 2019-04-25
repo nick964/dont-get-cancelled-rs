@@ -48,7 +48,6 @@ public class TwitterController {
   TokenSessionRepository tokenSessionRepository;
 
 
-  @CrossOrigin
   @RequestMapping(value = "/getToken", method = RequestMethod.GET)
   public TokenDao getTweetsFromTwit(HttpServletRequest request) throws Exception {
     Twitter twitter = twitterFactory.getInstance();
