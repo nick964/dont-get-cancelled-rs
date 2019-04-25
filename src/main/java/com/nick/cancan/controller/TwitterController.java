@@ -10,6 +10,7 @@ import com.nick.cancan.repository.BadWordsRepository;
 import com.nick.cancan.repository.TokenSessionRepository;
 import com.nick.cancan.service.CancelledRequestService;
 import com.nick.cancan.service.UserServiceImpl;
+import com.nick.cancan.util.AllowableHosts;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -48,6 +49,7 @@ public class TwitterController {
   TokenSessionRepository tokenSessionRepository;
 
 
+  @CrossOrigin
   @RequestMapping(value = "/getToken", method = RequestMethod.GET)
   public TokenDao getTweetsFromTwit(HttpServletRequest request) throws Exception {
     Twitter twitter = twitterFactory.getInstance();
@@ -56,7 +58,7 @@ public class TwitterController {
     return new TokenDao(token, "FALSE");
   }
 
-  @CrossOrigin
+  @CrossOrigin(origins = {})
   @RequestMapping(value = "/success", method = RequestMethod.GET)
   public @ResponseBody
     List<TweetDao> testSuccess(@RequestParam("oauth_token") String OAuthToken,
