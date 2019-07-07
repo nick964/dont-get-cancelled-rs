@@ -50,8 +50,9 @@ public class TwitterController {
 
 
 
+
+  @CrossOrigin
   @RequestMapping(value = "/getToken", method = RequestMethod.GET)
-  @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:4200", "http://www.dontgetcancelled.com"})
   public TokenDao getTweetsFromTwit(HttpServletRequest request) throws Exception {
     Twitter twitter = twitterFactory.getInstance();
     RequestToken token = twitter.getOAuthRequestToken(environmentProps.getCallbackUrl());
@@ -59,8 +60,8 @@ public class TwitterController {
     return new TokenDao(token, "FALSE");
   }
 
+  @CrossOrigin
   @RequestMapping(value = "/success", method = RequestMethod.GET)
-  @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:4200", "http://dontgetcancelled.com", "https://dontgetcancelled.com", "https://dont-get-cancelled.herokuapp.com"})
   public @ResponseBody
     List<TweetDao> testSuccess(@RequestParam("oauth_token") String OAuthToken,
                                @RequestParam("oauth_verifier") String OAuthVerifier,
@@ -77,16 +78,15 @@ public class TwitterController {
     return cancelledRequestService.getCancelledTweets(accessToken, twitter);
   }
 
+  @CrossOrigin
   @RequestMapping(value = "/delete", method = RequestMethod.POST)
-  @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:4200", "http://dontgetcancelled.com", "https://dontgetcancelled.com", "https://dont-get-cancelled.herokuapp.com"})
   public void deleteTweet(@RequestBody TweetDao tweet) throws Exception {
     LOGGER.info("Recieved tweet to delete with id: " + tweet.getId());
     cancelledRequestService.deleteTweet(tweet);
   }
 
-
+  @CrossOrigin
   @RequestMapping(value = "/herokuTest", method = RequestMethod.GET)
-  @CrossOrigin(origins = {"http://localhost:8080", "http://localhost:4200", "http://www.dontgetcancelled.com", "https://dontgetcancelled.com", "https://dont-get-cancelled.herokuapp.com"})
   public @ResponseBody String testDeploy() throws Exception {
     return  "SUCCESS";
   }
