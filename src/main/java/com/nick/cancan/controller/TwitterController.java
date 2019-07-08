@@ -51,7 +51,7 @@ public class TwitterController {
 
 
 
-  @CrossOrigin
+  @CrossOrigin(origins = {"http://www.dontgetcancelled.com", "http://localhost:5000"})
   @RequestMapping(value = "/getToken", method = RequestMethod.GET)
   public TokenDao getTweetsFromTwit(HttpServletRequest request) throws Exception {
     Twitter twitter = twitterFactory.getInstance();
