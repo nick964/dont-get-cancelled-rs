@@ -56,6 +56,7 @@ public class TwitterController {
   public TokenDao getTweetsFromTwit(HttpServletRequest request) throws Exception {
     Twitter twitter = twitterFactory.getInstance();
     RequestToken token = twitter.getOAuthRequestToken(environmentProps.getCallbackUrl());
+    LOGGER.info("Callback url is " + environmentProps.getCallbackUrl());
     tokenSessionRepository.save(new TokenSession(token.getToken(), token.getTokenSecret()));
     return new TokenDao(token, "FALSE");
   }
