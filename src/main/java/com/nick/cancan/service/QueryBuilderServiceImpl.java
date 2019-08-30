@@ -1,6 +1,7 @@
 package com.nick.cancan.service;
 
 import com.nick.cancan.entity.BadWord;
+import com.nick.cancan.exception.CancelledServiceException;
 import com.nick.cancan.model.MyQueryRequest;
 import com.nick.cancan.repository.BadWordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
     BadWordsRepository badWordsRepository;
 
     @Override
-    public MyQueryRequest buildQuery(String screenname) {
+    public MyQueryRequest buildQuery(String screenname) throws CancelledServiceException {
         if(StringUtils.isEmpty(screenname)) {
             //TODO: log and throw an error
         }
@@ -40,17 +41,15 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
         //append fund operator
         q = q.concat(buildFromOperation(screenname));
 
-        //negate retweets
-        //TODO: unavailable in sandbox version of application, upgrade to paid?
-        //q = q.concat(" -is:retweet ");
-
-        req.setQuery(q);
+        if(q.length() > 1024) {
+            throw new CancelledServiceException("Query is too long, user's screenname should not be this long..");
+        }
 
         return req;
     }
 
     private String buildFromOperation(String screenname) {
-        return "from:".concat(screenname);
+        return ("(from:".concat(screenname).concat(")"));
     }
 
 }
