@@ -13,8 +13,6 @@ import java.util.List;
 @Service
 public class QueryBuilderServiceImpl implements QueryBuilderService {
 
-    boolean inTest = true;
-
     @Autowired
     BadWordsRepository badWordsRepository;
 
@@ -28,7 +26,7 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
         String q = req.getQuery();
         q = q.concat("(");
 
-        List<BadWord> badWords = badWordsRepository.findAllWithLimit();
+        List<BadWord> badWords = badWordsRepository.findAll();
         Iterator iterator = badWords.iterator();
         BadWord nextWord = (BadWord) iterator.next();
         while(iterator.hasNext()) {
