@@ -44,6 +44,7 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
         if(q.length() > 1024) {
             throw new CancelledServiceException("Query is too long, user's screenname should not be this long..");
         }
+        req.setQuery(q);
 
         return req;
     }
