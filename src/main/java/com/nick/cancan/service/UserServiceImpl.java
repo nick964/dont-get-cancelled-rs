@@ -33,7 +33,6 @@ public class UserServiceImpl implements UserService {
         user.setScreenName(accessToken.getScreenName());
         user.setToken(accessToken.getToken());
         user.setTokenSecret(accessToken.getTokenSecret());
-        user.setId( accessToken.getUserId());
         user.setCreatedDate(new Date());
         user.setLastLogin(new Date());
         return user;
