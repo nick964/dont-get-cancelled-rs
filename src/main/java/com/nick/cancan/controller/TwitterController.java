@@ -1,8 +1,11 @@
 package com.nick.cancan.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nick.cancan.config.EnvironmentProps;
 import com.nick.cancan.entity.TokenSession;
+import com.nick.cancan.exception.CancelledServiceException;
+import com.nick.cancan.model.CancelledTweetResponse;
 import com.nick.cancan.model.FireCreds;
 import com.nick.cancan.model.TokenDao;
 import com.nick.cancan.model.TweetDao;
@@ -29,6 +32,8 @@ import java.util.List;
 public class TwitterController {
 
   private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TwitterController.class);
+  private static final String ERROR_RESPONSE = "ERROR";
+  private static final String SUCCESS_RESPONSE = "SUCCESS";
 
   @Autowired
   CancelledRequestService cancelledRequestService;
@@ -64,7 +69,7 @@ public class TwitterController {
   @CrossOrigin
   @RequestMapping(value = "/success", method = RequestMethod.GET)
   public @ResponseBody
-    List<TweetDao> testSuccess(@RequestParam("oauth_token") String OAuthToken,
+    CancelledTweetResponse testSuccess(@RequestParam("oauth_token") String OAuthToken,
                                @RequestParam("oauth_verifier") String OAuthVerifier,
                                HttpServletRequest request) throws Exception {
     TokenSession tokenSession = tokenSessionRepository.findByReqToken(OAuthToken);
@@ -76,8 +81,20 @@ public class TwitterController {
     AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, OAuthVerifier);
     twitter.setOAuthAccessToken(accessToken);
     userService.createAndSaveUser(accessToken);
-    return cancelledRequestService.getCancelledTweets(accessToken, twitter);
+    CancelledTweetResponse response =  createSuccessResponse(cancelledRequestService.getCancelledTweets(accessToken, twitter));
+    System.out.println(response);
+    ObjectMapper mapper = new ObjectMapper();
+    System.out.println(mapper.writeValueAsString(response));
+    return response;
   }
+
+
+  @ExceptionHandler(value = Exception.class)
+  public CancelledTweetResponse handleException(Exception e) {
+    LOGGER.error("Error calling Don't Get Cancelled service", e);
+    return createErrorResponse(e);
+  }
+
 
   @CrossOrigin
   @RequestMapping(value = "/delete", method = RequestMethod.POST)
@@ -86,12 +103,19 @@ public class TwitterController {
     cancelledRequestService.deleteTweet(tweet);
   }
 
-  @CrossOrigin
-  @RequestMapping(value = "/herokuTest", method = RequestMethod.GET)
-  public @ResponseBody String testDeploy() throws Exception {
-    return  "SUCCESS";
+  private CancelledTweetResponse createSuccessResponse(List<TweetDao> tweets) {
+    CancelledTweetResponse response = new CancelledTweetResponse();
+    response.setResponseStatus(SUCCESS_RESPONSE);
+    response.setTweets(tweets);
+    return response;
   }
 
+  private CancelledTweetResponse createErrorResponse(Exception e) {
+    CancelledTweetResponse response = new CancelledTweetResponse();
+    response.setResponseStatus(ERROR_RESPONSE);
+    response.setErrorCause(e.getLocalizedMessage());
+    return response;
+  }
 
 
 
