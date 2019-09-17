@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "canceled_words")
-public class BadWord {
+public class Word {
 
     @Id
     @Column(name="id")
@@ -41,12 +41,12 @@ public class BadWord {
         this.severity = severity;
     }
 
-    public BadWord(String text, Integer sev) {
+    public Word(String text, Integer sev) {
         this.text = text;
         this.severity = sev;
     }
 
-    public BadWord() {
+    public Word() {
     }
 
 

@@ -4,16 +4,13 @@ package com.nick.cancan.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nick.cancan.config.EnvironmentProps;
 import com.nick.cancan.entity.TokenSession;
-import com.nick.cancan.exception.CancelledServiceException;
 import com.nick.cancan.model.CancelledTweetResponse;
-import com.nick.cancan.model.FireCreds;
 import com.nick.cancan.model.TokenDao;
 import com.nick.cancan.model.TweetDao;
-import com.nick.cancan.repository.BadWordsRepository;
+import com.nick.cancan.repository.WordsRepository;
 import com.nick.cancan.repository.TokenSessionRepository;
 import com.nick.cancan.service.CancelledRequestService;
 import com.nick.cancan.service.UserServiceImpl;
-import com.nick.cancan.util.AllowableHosts;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -23,7 +20,6 @@ import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
@@ -39,7 +35,7 @@ public class TwitterController {
   CancelledRequestService cancelledRequestService;
 
   @Autowired
-  BadWordsRepository badWordsRepository;
+  WordsRepository wordsRepository;
 
   @Autowired
   UserServiceImpl userService;

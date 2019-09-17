@@ -1,9 +1,9 @@
 package com.nick.cancan.service;
 
-import com.nick.cancan.entity.BadWord;
+import com.nick.cancan.entity.Word;
 import com.nick.cancan.exception.CancelledServiceException;
 import com.nick.cancan.model.MyQueryRequest;
-import com.nick.cancan.repository.BadWordsRepository;
+import com.nick.cancan.repository.WordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -15,7 +15,7 @@ import java.util.List;
 public class QueryBuilderServiceImpl implements QueryBuilderService {
 
     @Autowired
-    BadWordsRepository badWordsRepository;
+    WordsRepository wordsRepository;
 
     @Override
     public MyQueryRequest buildQuery(String screenname) throws CancelledServiceException {
@@ -27,12 +27,12 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
         String q = req.getQuery();
         q = q.concat("(");
 
-        List<BadWord> badWords = badWordsRepository.findAll();
-        Iterator iterator = badWords.iterator();
-        BadWord nextWord = (BadWord) iterator.next();
+        List<Word> words = wordsRepository.findAll();
+        Iterator iterator = words.iterator();
+        Word nextWord = (Word) iterator.next();
         while(iterator.hasNext()) {
             q = q.concat(nextWord.getText()).concat(" OR ");
-            nextWord = (BadWord) iterator.next();
+            nextWord = (Word) iterator.next();
         }
         //for the last word, don't add 'OR'
         //also add the 'from'

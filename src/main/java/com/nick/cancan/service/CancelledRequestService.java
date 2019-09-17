@@ -39,7 +39,7 @@ public class CancelledRequestService {
 
     public static String BEARER_URL = "https://api.twitter.com/oauth2/token";
     public static String FULL_ARCHIVE_URL = "https://api.twitter.com/1.1/tweets/search/fullarchive/dev.json";
-    public static String DELETE_URL = "https://api.twitter.com/1.1/statuses/destroy/";
+
 
 
     public List<TweetDao> getCancelledTweets(AccessToken accessToken, Twitter twitter) throws CancelledServiceException {
