@@ -22,7 +22,6 @@ public class QueryBuilderServiceImpl implements QueryBuilderService {
         if(StringUtils.isEmpty(screenname)) {
             //TODO: log and throw an error
         }
-        screenname = "phamm__";
 
         MyQueryRequest req = new MyQueryRequest();
         String q = req.getQuery();
